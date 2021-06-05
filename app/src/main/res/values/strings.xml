@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">RxJava2NewsAPI</string>
+    <string name="app_name">Antino Labs News</string>
+    <string name="api_key">bb11ab21f1604bdaaa413a384c4ba6e0</string>
 </resources>

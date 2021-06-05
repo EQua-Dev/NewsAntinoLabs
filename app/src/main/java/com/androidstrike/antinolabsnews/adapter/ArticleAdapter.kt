@@ -1,6 +1,7 @@
-package com.example.rxjava2newsapi.adapter
+package com.androidstrike.antinolabsnews.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,17 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.rxjava2newsapi.R
-import com.example.rxjava2newsapi.model.Article
+import com.androidstrike.antinolabsnews.R
+import com.androidstrike.antinolabsnews.`interface`.INewsClickListener
+import com.androidstrike.antinolabsnews.model.Article
+import com.androidstrike.antinolabsnews.ui.NewsDetail
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_article.view.*
 
 class ArticleAdapter(
+    public val context: Context,
     private var articleList: ArrayList<Article>
 ) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
 
-    private val placeHolderImage = "https://pbs.twimg.com/profile_images/467502291415617536/SP8_ylk9.png"
+    private val placeHolderImage = "https://image.shutterstock.com/image-vector/newspaper-icon-vector-news-paper-260nw-1890929389.jpg"
     private lateinit var viewGroupContext: Context
+    lateinit var iNewsClickListener: INewsClickListener
+
+    fun setClick(iNewsClickListener: INewsClickListener){
+        this.iNewsClickListener = iNewsClickListener
+    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): ArticleViewHolder {
         viewGroupContext = viewGroup.context
@@ -35,7 +44,15 @@ class ArticleAdapter(
         setPropertiesForArticleViewHolder(articleViewHolder, article)
         articleViewHolder.cardView.setOnClickListener {
             //do something
+            val i = Intent(context, NewsDetail::class.java)
+            i.putExtra("newsUrl", article.url)
+            context.startActivity(i)
+//            var articleUrl = article.url
+//            onClick(it)
+
         }
+
+
     }
 
     private fun setPropertiesForArticleViewHolder(articleViewHolder: ArticleViewHolder, article: Article) {
@@ -72,4 +89,8 @@ class ArticleAdapter(
         val title: TextView by lazy { view.article_title }
         val description: TextView by lazy { view.article_description }
     }
+
+//    override fun onClick(v: View?) {
+//        iNewsClickListener.onItemClickListener(v!!, articleList[])
+//    }
 }

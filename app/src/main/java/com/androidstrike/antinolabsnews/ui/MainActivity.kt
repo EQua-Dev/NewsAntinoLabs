@@ -1,4 +1,4 @@
-package com.example.rxjava2newsapi.ui
+package com.androidstrike.antinolabsnews.ui
 
 import android.app.SearchManager
 import android.content.Context
@@ -13,11 +13,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import com.example.rxjava2newsapi.R
-import com.example.rxjava2newsapi.adapter.ArticleAdapter
-import com.example.rxjava2newsapi.model.Article
-import com.example.rxjava2newsapi.model.TopHeadlines
-import com.example.rxjava2newsapi.news_api.TopHeadlinesEndpoint
+import com.androidstrike.antinolabsnews.R
+import com.androidstrike.antinolabsnews.adapter.ArticleAdapter
+import com.androidstrike.antinolabsnews.model.Article
+import com.androidstrike.antinolabsnews.model.TopHeadlines
+import com.androidstrike.antinolabsnews.news_api.EverythingAPI
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private val ENDPOINT_URL by lazy { "https://newsapi.org/v2/" }
-    private lateinit var topHeadlinesEndpoint: TopHeadlinesEndpoint
+    private lateinit var everythingAPI: EverythingAPI
     private lateinit var newsApiConfig: String
     private lateinit var articleAdapter: ArticleAdapter
     private lateinit var articleList: ArrayList<Article>
@@ -47,12 +47,12 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
         //Network request
         val retrofit: Retrofit = generateRetrofitBuilder()
-        topHeadlinesEndpoint = retrofit.create(TopHeadlinesEndpoint::class.java)
+        everythingAPI = retrofit.create(EverythingAPI::class.java)
         newsApiConfig = resources.getString(R.string.api_key)
         swipe_refresh.setOnRefreshListener(this)
         swipe_refresh.setColorSchemeResources(R.color.colorAccent)
         articleList = ArrayList()
-        articleAdapter = ArticleAdapter(articleList)
+        articleAdapter = ArticleAdapter(this, articleList)
         //When the app is launched of course the user input is empty.
         userKeyWordInput = ""
         //CompositeDisposable is needed to avoid memory leaks
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private fun getKeyWordQuery(userKeywordInput: String) {
         swipe_refresh.isRefreshing = true
         if (userKeywordInput != null && userKeywordInput.isNotEmpty()) {
-            topHeadlinesObservable = topHeadlinesEndpoint.getUserSearchInput(newsApiConfig, userKeywordInput)
+            topHeadlinesObservable = everythingAPI.getUserSearchInput(userKeywordInput)//(newsApiConfig, userKeywordInput)
             subscribeObservableOfArticle()
         } else {
             queryTopHeadlines()
@@ -143,7 +143,8 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun queryTopHeadlines() {
         swipe_refresh.isRefreshing = true
-        topHeadlinesObservable = topHeadlinesEndpoint.getTopHeadlines("us", newsApiConfig)
+        topHeadlinesObservable = everythingAPI.getTopHeadlines()//("us", newsApiConfig)
+        Log.d("EQUA", "queryTopHeadlines: reached here")
         subscribeObservableOfArticle()
     }
 
@@ -164,6 +165,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
             override fun onNext(article: Article) {
                 if (!articleList.contains(article)) {
                     articleList.add(article)
+                    Log.d("EQUA", "onNext: Reached here")
                 }
             }
 

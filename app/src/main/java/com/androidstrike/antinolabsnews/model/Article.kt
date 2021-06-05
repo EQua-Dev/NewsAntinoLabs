@@ -1,4 +1,4 @@
-package com.example.rxjava2newsapi.model
+package com.androidstrike.antinolabsnews.model
 
 data class Article(
     val source: Source,

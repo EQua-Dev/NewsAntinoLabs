@@ -1,4 +1,4 @@
-package com.example.rxjava2newsapi
+package com.androidstrike.antinolabsnews
 
 import org.junit.Test
 

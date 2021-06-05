@@ -5,9 +5,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
-        applicationId "com.example.rxjava2newsapi"
+        applicationId "com.androidstrike.antinolabsnews"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
